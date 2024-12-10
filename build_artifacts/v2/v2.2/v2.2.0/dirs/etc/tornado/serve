@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# Here we can add logic to run tornado server by default, and have custom pass in various values
+# for $SAGEMAKER_INFERENCE_TYPE env variable to run other ML/LLM Servers.
+if [ "$SAGEMAKER_INFERENCE_TYPE" == "tornado" ]
+then
+  python /etc/tornado/async_server.py
+else
+  python /etc/tornado/sync_server.py
+fi

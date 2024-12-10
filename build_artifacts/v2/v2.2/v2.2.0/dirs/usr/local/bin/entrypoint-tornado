@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+# Generate and execute the shell code to modifies shell variables to include
+# micromamba commands (e.g. using `micromamba activate` to activate environments)
+eval "$(micromamba shell hook --shell=bash)"
+
+# Activate conda environment 'base', where supervisord is installed
+micromamba activate base
+
+exec python /etc/tornado/async_server.py

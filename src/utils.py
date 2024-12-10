@@ -2,8 +2,8 @@ import json
 import os
 
 import conda.cli.python_api
-from conda.env.specs import RequirementsSpec
 from conda.models.match_spec import MatchSpec
+from conda.env.specs import RequirementsSpec
 from semver import Version
 
 

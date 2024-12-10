@@ -71,7 +71,7 @@ def _generate_staleness_report_per_image(
         package_string = (
             package
             if version_in_sagemaker_distribution == package_versions_in_upstream[package]
-            else "${\color{red}" + package + "}$"
+            else "${color{red}" + package + "}$"
         )
         staleness_report_rows.append(
             {
@@ -125,7 +125,7 @@ def _validate_new_package_size(new_package_total_size, target_total_size, image_
             + str(new_package_total_size_percent)
             + "%)"
         )
-        new_package_total_size_percent_string = "${\color{red}" + str(new_package_total_size_percent) + "}$"
+        new_package_total_size_percent_string = "${color{red}" + str(new_package_total_size_percent) + "}$"
 
     print(
         "The total size of newly introduced Python packages is "

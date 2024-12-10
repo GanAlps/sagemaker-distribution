@@ -22,6 +22,8 @@ ENV SAGEMAKER_LOGGING_DIR="/var/log/sagemaker/"
 ENV STUDIO_LOGGING_DIR="/var/log/studio/"
 ENV EDITOR="nano"
 ENV IMAGE_VERSION=$IMAGE_VERSION
+# Env variable used to control Inference ML Server.
+ENV SAGEMAKER_INFERENCE_TYPE="tornado"
 
 USER root
 RUN usermod "--login=${NB_USER}" "--home=/home/${NB_USER}" --move-home "-u ${NB_UID}" "${MAMBA_USER}" && \
@@ -180,7 +182,8 @@ RUN mkdir -p $SAGEMAKER_LOGGING_DIR && \
     && ${HOME_DIR}/oss_compliance/generate_oss_compliance.sh ${HOME_DIR} python \
     && rm -rf ${HOME_DIR}/oss_compliance*
 
-ENV PATH="/opt/conda/bin:/opt/conda/condabin:$PATH"
+# Adding tornado to path, so that docker can run serve as executable.
+ENV PATH="/etc/tornado:/opt/conda/bin:/opt/conda/condabin:$PATH"
 WORKDIR "/home/${NB_USER}"
 ENV SHELL=/bin/bash
 ENV OPENSSL_MODULES=/opt/conda/lib64/ossl-modules/

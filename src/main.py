@@ -8,6 +8,7 @@ import shutil
 import boto3
 import docker
 import pytest
+import datetime
 from conda.models.match_spec import MatchSpec
 from docker.errors import BuildError, ContainerError
 from semver import Version
@@ -254,8 +255,9 @@ def _build_local_images(
         config = _get_config_for_image(target_version_dir, image_generator_config, force)
         config["build_args"]["IMAGE_VERSION"] = config["image_tag_generator"].format(image_version=str(target_version))
         try:
+            print(f"{datetime.datetime.now()} : building image for {target_version_dir} buildargs: {config['build_args']}")
             image, log_gen = _docker_client.images.build(
-                path=target_version_dir, rm=True, pull=True, buildargs=config["build_args"]
+                path=target_version_dir, rm=True, pull=True, nocache=True, buildargs=config["build_args"]
             )
         except BuildError as e:
             for line in e.build_log:
@@ -263,9 +265,9 @@ def _build_local_images(
                     print(line["stream"].strip())
             # After printing the logs, raise the exception (which is the old behavior)
             raise
-        print(f"Successfully built an image with id: {image.id}")
+        print(f"{datetime.datetime.now()} : Successfully built an image with id: {image.id}")
         generated_image_ids.append(image.id)
-        try:
+        '''try:
             container_logs = _docker_client.containers.run(
                 image=image.id, detach=False, auto_remove=True, command="micromamba env export --explicit"
             )
@@ -275,7 +277,7 @@ def _build_local_images(
             raise
 
         with open(f'{target_version_dir}/{config["env_out_filename"]}', "wb") as f:
-            f.write(container_logs)
+            f.write(container_logs)'''
 
         # Generate change logs. Use the original image generator config which contains the name
         # of the actual env.in file instead of the 'config'.
